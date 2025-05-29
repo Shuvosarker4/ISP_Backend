@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from .models import Package
-from .serializers import PackageSerializer
+from package.models import Package
+from package.serializers import PackageSerializer
 
 class PackageViewSet(ModelViewSet):
     serializer_class = PackageSerializer
