@@ -32,6 +32,10 @@ class User(AbstractUser):
     ('maintenance', 'Maintenance Services'),
     ('training', 'Training Programs'),
     ]
+    ACCOUNT_TYPE_CHOICES = [
+    ('admin', 'Admin'),
+    ('reseller', 'Reseller'),
+    ]
     
 
     username = None
@@ -48,8 +52,7 @@ class User(AbstractUser):
     address = models.TextField(max_length=20,blank=True,null=True)
     services = MultiSelectField(choices=SERVICES_CHOICES, max_length=200)
     notes = models.TextField()
-    is_active = models.BooleanField(default=True)
-    account_type=models.CharField(default="Reseller")
+    account_type=models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES,default="Reseller")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
