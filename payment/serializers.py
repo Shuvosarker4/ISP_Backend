@@ -18,8 +18,17 @@ class PaymentSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['created_at', 'updated_at']
 
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     request = self.context.get('request', None)
+    #     if request:
+    #         self.fields['customer'].queryset = Customer.objects.filter(reseller=request.user)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         request = self.context.get('request', None)
-        if request:
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
             self.fields['customer'].queryset = Customer.objects.filter(reseller=request.user)
+        else:
+            self.fields['customer'].queryset = Customer.objects.none()
