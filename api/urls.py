@@ -15,4 +15,5 @@ router.register('expenses', ExpenseViewSet, basename='expenses')
 
 urlpatterns = [
     path('',include(router.urls)),
+    path('dashboard/', include('dashboard.urls')), 
 ]
