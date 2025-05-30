@@ -9,7 +9,11 @@ class CategoryViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Category.objects.filter(reseller=self.request.user).order_by('-created_at')
+        user = self.request.user
+        if user.is_authenticated:
+            return Category.objects.filter(reseller=user).order_by('-created_at')
+        else:
+            return Category.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(reseller=self.request.user)
@@ -19,7 +23,13 @@ class ExpenseViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Expense.objects.filter(reseller=self.request.user).order_by('-created_at')
+        user = self.request.user
+        if user.is_authenticated:
+            return Expense.objects.filter(reseller=user).order_by('-created_at')
+        else:
+            # Return empty queryset if user is anonymous (e.g. during swagger schema generation)
+            return Expense.objects.none()
+        
 
     def perform_create(self, serializer):
         serializer.save(reseller=self.request.user)

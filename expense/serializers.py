@@ -34,6 +34,9 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
+        
+        request = self.context.get('request', None)
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
             self.fields['category'].queryset = Category.objects.filter(reseller=request.user)
+        else:
+            self.fields['category'].queryset = Category.objects.none()

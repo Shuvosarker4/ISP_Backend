@@ -9,7 +9,10 @@ class CustomerViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Customer.objects.filter(reseller=self.request.user).order_by('-created_at')
+        user = self.request.user
+        if user.is_authenticated:
+            return Customer.objects.filter(reseller=user).order_by('-created_at')
+        return Customer.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(reseller=self.request.user)

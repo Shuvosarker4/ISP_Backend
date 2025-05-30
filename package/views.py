@@ -8,7 +8,11 @@ class PackageViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Package.objects.filter(creator=self.request.user)
+        user = self.request.user
+        if user.is_authenticated:
+            return Package.objects.filter(creator=user)
+        return Package.objects.none()
+
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)

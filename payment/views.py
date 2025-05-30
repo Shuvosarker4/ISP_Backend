@@ -12,7 +12,11 @@ class PaymentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Payment.objects.filter(customer__reseller=self.request.user).order_by('-created_at')
+        user = self.request.user
+        if user.is_authenticated:
+            return Payment.objects.filter(customer__reseller=user).order_by('-created_at')
+        else:
+            return Payment.objects.none()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
